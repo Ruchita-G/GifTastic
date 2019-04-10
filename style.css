@@ -1,0 +1,29 @@
+body{
+ background: url("Picture.png");
+}
+
+#button-text {
+    margin-top: 35px;
+}
+
+#tvShow{
+    padding: 40px;
+}
+
+button{
+    margin: 10px;
+}
+
+.gif{
+    margin: 10px;
+}
+
+#gif-display{
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-align-content: center;
+}
+    
+

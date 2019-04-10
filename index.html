@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>TV Show Gifs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-8">
+                <h1>Look for your Favriote TV show Gifs!</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-9" id="button-text"></div>
+            <div class="col-3">
+                <form id="tvShow">
+                    <label for="tvShow-input">Add your TV Show!</label><br>
+                    <input type="text" id="tvShow-input"><br><br>
+                    <input id="add-tvShow" type="submit">
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12" id="gif-display"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        var tvShows = ["Seinfield", "Breaking Bad", "Game of Thrones", "That 70's Show", "Wonder Years", "Malcom in the Middle", "Insecured", "The Walking Dead", "Handmaid's Tale", "The Voice"]
+
+        function displayGifs() {
+
+            var tvShow = $(this).attr("show-name");
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + tvShow + "&api_key=psJiwkjMguEvN2HT90gQiD0c0zqwJjFh&limit=10&rating=g";
+
+
+
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+
+
+                var results = response.data;
+                $("#gif-display").empty();
+
+                for (var i = 0; i < results.length; i++) {
+                    var gifDiv = $("<div class='search-show'>");
+                    var showImage = $("<img>");
+                    var animate = results[i].images.fixed_height.url;
+                    var still = results[i].images.fixed_height_still.url;
+                    showImage.attr("src", still);
+
+                    showImage.attr("data-state", "still");
+                    showImage.attr("data-still", still);
+
+                    showImage.attr("data-animate", animate);
+
+                    showImage.addClass("gif");
+
+                    gifDiv.append(showImage);
+
+                    $("#gif-display").append(gifDiv);
+
+                }
+
+            });
+        }
+        function renderButtons() {
+
+            $("#button-text").empty();
+
+            for (var i = 0; i < tvShows.length; i++) {
+                var tv = $("<button>");
+                tv.addClass("tvShow");
+                tv.attr("show-name", tvShows[i]);
+                tv.text(tvShows[i]);
+                $("#button-text").append(tv);
+            }
+        }
+
+
+        $("#add-tvShow").on("click", function (event) {
+            event.preventDefault();
+
+            var tvShow = $("#tvShow-input").val();
+            tvShows.push(tvShow);
+            console.log(tvShows);
+
+            renderButtons();
+        });
+
+
+
+        $(document).on("click", ".gif", function () {
+            var state = $(this).attr("data-state");
+            if (state === "still") {
+                $(this).attr("src", $(this).attr("data-animate"));
+                console.log("still");
+                $(this).attr("data-state", "data-animate");
+            } else {
+                $(this).attr("src", $(this).attr("data-still"));
+                $(this).attr("data-state", "data-still");
+            }
+        });
+
+        $(document).on("click", ".tvShow", displayGifs);
+
+        renderButtons();
+
+
+
+
+    </script>
+    </div>
+</body>
+
+</html>
